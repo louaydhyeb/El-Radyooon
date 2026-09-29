@@ -1,0 +1,36 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="expo.modules.homewidget" >
+4
+5    <uses-sdk android:minSdkVersion="24" />
+6
+7    <application>
+7-->/Users/louaydhyeb/AndroidStudioProjects/Wave Radios/modules/home-widget/android/src/main/AndroidManifest.xml:2:3-15:17
+8        <receiver
+8-->/Users/louaydhyeb/AndroidStudioProjects/Wave Radios/modules/home-widget/android/src/main/AndroidManifest.xml:3:5-14:16
+9            android:name="expo.modules.homewidget.PlayerWidgetProvider"
+9-->/Users/louaydhyeb/AndroidStudioProjects/Wave Radios/modules/home-widget/android/src/main/AndroidManifest.xml:4:7-43
+10            android:exported="true"
+10-->/Users/louaydhyeb/AndroidStudioProjects/Wave Radios/modules/home-widget/android/src/main/AndroidManifest.xml:5:7-30
+11            android:label="@string/widget_name" >
+11-->/Users/louaydhyeb/AndroidStudioProjects/Wave Radios/modules/home-widget/android/src/main/AndroidManifest.xml:6:7-42
+12            <intent-filter>
+12-->/Users/louaydhyeb/AndroidStudioProjects/Wave Radios/modules/home-widget/android/src/main/AndroidManifest.xml:7:7-10:23
+13                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+13-->/Users/louaydhyeb/AndroidStudioProjects/Wave Radios/modules/home-widget/android/src/main/AndroidManifest.xml:8:9-76
+13-->/Users/louaydhyeb/AndroidStudioProjects/Wave Radios/modules/home-widget/android/src/main/AndroidManifest.xml:8:17-73
+14                <action android:name="expo.modules.homewidget.TOGGLE" />
+14-->/Users/louaydhyeb/AndroidStudioProjects/Wave Radios/modules/home-widget/android/src/main/AndroidManifest.xml:9:9-65
+14-->/Users/louaydhyeb/AndroidStudioProjects/Wave Radios/modules/home-widget/android/src/main/AndroidManifest.xml:9:17-62
+15            </intent-filter>
+16
+17            <meta-data
+17-->/Users/louaydhyeb/AndroidStudioProjects/Wave Radios/modules/home-widget/android/src/main/AndroidManifest.xml:11:7-13:54
+18                android:name="android.appwidget.provider"
+18-->/Users/louaydhyeb/AndroidStudioProjects/Wave Radios/modules/home-widget/android/src/main/AndroidManifest.xml:12:9-50
+19                android:resource="@xml/player_widget_info" />
+19-->/Users/louaydhyeb/AndroidStudioProjects/Wave Radios/modules/home-widget/android/src/main/AndroidManifest.xml:13:9-51
+20        </receiver>
+21    </application>
+22
+23</manifest>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="widget_name">El Radyooon</string>
+  <string name="widget_description">Lecture, pause et radio en cours.</string>
+  <string name="widget_empty_title">El Radyooon</string>
+  <string name="widget_empty_subtitle">"Choisissez une radio dans l'app"</string>
+  <string name="widget_brand">EL RADYOOON</string>
+  <string name="widget_play">Lecture</string>
+  <string name="widget_pause">Pause</string>
+</resources>

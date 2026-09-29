@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="widget_name">El Radyooon</string>
+  <string name="widget_description">تشغيل وإيقاف واسم المحطة الحالية.</string>
+  <string name="widget_empty_title">El Radyooon</string>
+  <string name="widget_empty_subtitle">اختر محطة من التطبيق</string>
+  <string name="widget_brand">EL RADYOOON</string>
+  <string name="widget_play">تشغيل</string>
+  <string name="widget_pause">إيقاف</string>
+</resources>

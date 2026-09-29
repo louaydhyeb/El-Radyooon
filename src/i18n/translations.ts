@@ -118,6 +118,10 @@ export const fr = {
   'mini.connecting': 'Connexion au flux…',
   'mini.live': 'En direct • {info}',
 
+  'widget.emptySubtitle': 'Choisissez une radio dans l’app',
+  'widget.live': 'En direct',
+  'widget.connecting': 'Connexion…',
+
   'common.live': 'En direct',
   'common.world': 'Monde',
   'common.loading': 'Chargement des flux…',
@@ -242,6 +246,10 @@ export const en: Record<keyof typeof fr, string> = {
   'mini.connecting': 'Connecting to stream…',
   'mini.live': 'Live • {info}',
 
+  'widget.emptySubtitle': 'Pick a station in the app',
+  'widget.live': 'Live',
+  'widget.connecting': 'Connecting…',
+
   'common.live': 'Live',
   'common.world': 'World',
   'common.loading': 'Loading streams…',
@@ -365,6 +373,10 @@ export const ar: Record<keyof typeof fr, string> = {
 
   'mini.connecting': 'جاري الاتصال بالبث…',
   'mini.live': 'مباشر • {info}',
+
+  'widget.emptySubtitle': 'اختر محطة من التطبيق',
+  'widget.live': 'مباشر',
+  'widget.connecting': 'جاري الاتصال…',
 
   'common.live': 'مباشر',
   'common.world': 'العالم',

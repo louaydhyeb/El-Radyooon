@@ -1,0 +1,19 @@
+expo.modules.homewidget
+drawable widget_background
+drawable widget_ic_pause
+drawable widget_ic_play
+drawable widget_play_bg
+id widget_brand
+id widget_root
+id widget_station
+id widget_subtitle
+id widget_toggle
+layout player_widget
+string widget_brand
+string widget_description
+string widget_empty_subtitle
+string widget_empty_title
+string widget_name
+string widget_pause
+string widget_play
+xml player_widget_info

@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
@@ -21,6 +21,7 @@ import {
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { RootNavigator } from './src/navigation/RootNavigator';
+import { startHomeWidgetSync } from './src/services/homeWidget';
 import { colors } from './src/theme/tokens';
 
 SplashScreen.preventAutoHideAsync().catch(() => undefined);
@@ -44,6 +45,13 @@ export default function App() {
     if (loaded) {
       await SplashScreen.hideAsync();
     }
+  }, [loaded]);
+
+  useEffect(() => {
+    if (!loaded) {
+      return;
+    }
+    return startHomeWidgetSync();
   }, [loaded]);
 
   if (!loaded) {

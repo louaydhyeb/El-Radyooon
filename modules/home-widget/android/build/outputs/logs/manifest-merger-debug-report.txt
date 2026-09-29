@@ -1,0 +1,42 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /Users/louaydhyeb/AndroidStudioProjects/Wave Radios/modules/home-widget/android/src/main/AndroidManifest.xml:1:1-16:12
+INJECTED from /Users/louaydhyeb/AndroidStudioProjects/Wave Radios/modules/home-widget/android/src/main/AndroidManifest.xml:1:1-16:12
+	package
+		INJECTED from /Users/louaydhyeb/AndroidStudioProjects/Wave Radios/modules/home-widget/android/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /Users/louaydhyeb/AndroidStudioProjects/Wave Radios/modules/home-widget/android/src/main/AndroidManifest.xml:1:11-69
+application
+ADDED from /Users/louaydhyeb/AndroidStudioProjects/Wave Radios/modules/home-widget/android/src/main/AndroidManifest.xml:2:3-15:17
+receiver#expo.modules.homewidget.PlayerWidgetProvider
+ADDED from /Users/louaydhyeb/AndroidStudioProjects/Wave Radios/modules/home-widget/android/src/main/AndroidManifest.xml:3:5-14:16
+	android:label
+		ADDED from /Users/louaydhyeb/AndroidStudioProjects/Wave Radios/modules/home-widget/android/src/main/AndroidManifest.xml:6:7-42
+	android:exported
+		ADDED from /Users/louaydhyeb/AndroidStudioProjects/Wave Radios/modules/home-widget/android/src/main/AndroidManifest.xml:5:7-30
+	android:name
+		ADDED from /Users/louaydhyeb/AndroidStudioProjects/Wave Radios/modules/home-widget/android/src/main/AndroidManifest.xml:4:7-43
+intent-filter#action:name:android.appwidget.action.APPWIDGET_UPDATE+action:name:expo.modules.homewidget.TOGGLE
+ADDED from /Users/louaydhyeb/AndroidStudioProjects/Wave Radios/modules/home-widget/android/src/main/AndroidManifest.xml:7:7-10:23
+action#android.appwidget.action.APPWIDGET_UPDATE
+ADDED from /Users/louaydhyeb/AndroidStudioProjects/Wave Radios/modules/home-widget/android/src/main/AndroidManifest.xml:8:9-76
+	android:name
+		ADDED from /Users/louaydhyeb/AndroidStudioProjects/Wave Radios/modules/home-widget/android/src/main/AndroidManifest.xml:8:17-73
+action#expo.modules.homewidget.TOGGLE
+ADDED from /Users/louaydhyeb/AndroidStudioProjects/Wave Radios/modules/home-widget/android/src/main/AndroidManifest.xml:9:9-65
+	android:name
+		ADDED from /Users/louaydhyeb/AndroidStudioProjects/Wave Radios/modules/home-widget/android/src/main/AndroidManifest.xml:9:17-62
+meta-data#android.appwidget.provider
+ADDED from /Users/louaydhyeb/AndroidStudioProjects/Wave Radios/modules/home-widget/android/src/main/AndroidManifest.xml:11:7-13:54
+	android:resource
+		ADDED from /Users/louaydhyeb/AndroidStudioProjects/Wave Radios/modules/home-widget/android/src/main/AndroidManifest.xml:13:9-51
+	android:name
+		ADDED from /Users/louaydhyeb/AndroidStudioProjects/Wave Radios/modules/home-widget/android/src/main/AndroidManifest.xml:12:9-50
+uses-sdk
+INJECTED from /Users/louaydhyeb/AndroidStudioProjects/Wave Radios/modules/home-widget/android/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /Users/louaydhyeb/AndroidStudioProjects/Wave Radios/modules/home-widget/android/src/main/AndroidManifest.xml
+INJECTED from /Users/louaydhyeb/AndroidStudioProjects/Wave Radios/modules/home-widget/android/src/main/AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from /Users/louaydhyeb/AndroidStudioProjects/Wave Radios/modules/home-widget/android/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /Users/louaydhyeb/AndroidStudioProjects/Wave Radios/modules/home-widget/android/src/main/AndroidManifest.xml
