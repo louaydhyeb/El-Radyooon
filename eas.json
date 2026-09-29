@@ -1,0 +1,27 @@
+{
+  "cli": {
+    "version": ">= 24.7.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "distribution": "internal"
+    },
+    "production": {
+      "autoIncrement": true,
+      "buildArtifactPaths": [
+        "android/app/build/outputs/mapping/release/mapping.txt"
+      ],
+      "android": {
+        "buildType": "app-bundle"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}

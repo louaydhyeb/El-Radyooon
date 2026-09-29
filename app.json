@@ -1,25 +1,103 @@
 {
   "expo": {
-    "name": "wave-radios",
-    "slug": "wave-radios",
+    "name": "El Radyooon",
+    "slug": "el-radyooon",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "dark",
+    "scheme": "elradyooon",
+    "locales": {
+      "fr": "./languages/fr.json",
+      "en": "./languages/en.json",
+      "ar": "./languages/ar.json"
+    },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.elradyooon.app",
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "audio"
+        ],
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true
+        },
+        "NSMicrophoneUsageDescription": "El Radyooon utilise le micro pour la recherche vocale de radios.",
+        "CFBundleAllowMixedLocalizations": true,
+        "CFBundleLocalizations": [
+          "fr",
+          "en",
+          "ar"
+        ]
+      }
     },
     "android": {
+      "package": "com.elradyooon.app",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#0E0E12",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "usesCleartextTraffic": true,
+      "permissions": [
+        "android.permission.INTERNET",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK",
+        "android.permission.WAKE_LOCK",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.MODIFY_AUDIO_SETTINGS"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-font",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#0E0E12",
+          "image": "./assets/icon.png"
+        }
+      ],
+      [
+        "expo-audio",
+        {
+          "enableBackgroundPlayback": true,
+          "enableBackgroundRecording": false
+        }
+      ],
+      [
+        "expo-localization",
+        {
+          "supportsRTL": true,
+          "supportedLocales": {
+            "ios": ["fr", "en", "ar"],
+            "android": ["fr", "en", "ar"]
+          }
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "enableMinifyInReleaseBuilds": true,
+            "enableShrinkResourcesInReleaseBuilds": true,
+            "extraProguardRules": "-keep class expo.modules.** { *; }\n-keep class com.facebook.react.** { *; }\n-keep class com.facebook.hermes.** { *; }\n-keep class com.facebook.jni.** { *; }\n-keep class com.swmansion.gesturehandler.** { *; }\n-keep class com.swmansion.rnscreens.** { *; }\n-keep class com.th3rdwave.safeareacontext.** { *; }\n-keepattributes SourceFile,LineNumberTable"
+          }
+        }
+      ]
+    ],
+    "androidStatusBar": {
+      "backgroundColor": "#0E0E12",
+      "barStyle": "light-content"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "362c642e-e2c7-4ce3-8f3f-8482d6077cf0"
+      }
     }
   }
 }

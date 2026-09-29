@@ -1,0 +1,9 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "El Radyooon",
+    "NSMicrophoneUsageDescription": "يستخدم El Radyooon الميكروفون للبحث الصوتي عن الإذاعات."
+  },
+  "android": {
+    "app_name": "El Radyooon"
+  }
+}
