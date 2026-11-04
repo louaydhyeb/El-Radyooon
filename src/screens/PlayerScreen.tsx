@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Alert, Animated, Linking, Share, StyleSheet, Text, View } from 'react-native';
 import { VolumeBar } from '../components/VolumeBar';
 import { useNavigation } from '@react-navigation/native';
@@ -11,7 +11,9 @@ import { PressableScale } from '../components/PressableScale';
 import { StationArtwork } from '../components/StationArtwork';
 import { useFavoritesStore } from '../store/favoritesStore';
 import { usePlayerStore } from '../store/playerStore';
+import { audioService } from '../services/audioService';
 import { colors, fonts, shadows } from '../theme/tokens';
+import { formatNowPlaying } from '../services/icy';
 import { countryFlag, formatBitrate, formatCodec, stationLocation } from '../utils/station';
 import { SLEEP_TIMER_OPTIONS } from '../utils/constants';
 import { useT } from '../i18n';
@@ -24,6 +26,7 @@ export function PlayerScreen() {
   const isBuffering = usePlayerStore((s) => s.isBuffering);
   const volume = usePlayerStore((s) => s.volume);
   const error = usePlayerStore((s) => s.error);
+  const nowPlaying = usePlayerStore((s) => s.nowPlaying);
   const sleepTimerEndsAt = usePlayerStore((s) => s.sleepTimerEndsAt);
   const togglePlay = usePlayerStore((s) => s.togglePlay);
   const setVolume = usePlayerStore((s) => s.setVolume);
@@ -34,30 +37,69 @@ export function PlayerScreen() {
   const toggleFavorite = useFavoritesStore((s) => s.toggleFavorite);
   const [sleepOpen, setSleepOpen] = useState(false);
   const glowPulse = useMemo(() => new Animated.Value(0), []);
+  const liveGlow = useRef(false);
   const t = useT();
 
   useEffect(() => {
     if (!isPlaying) {
+      liveGlow.current = false;
       glowPulse.stopAnimation();
       glowPulse.setValue(0);
       return;
     }
-    const animation = Animated.loop(
-      Animated.sequence([
-        Animated.timing(glowPulse, {
-          toValue: 1,
-          duration: 2000,
-          useNativeDriver: true,
-        }),
-        Animated.timing(glowPulse, {
-          toValue: 0,
-          duration: 2000,
-          useNativeDriver: true,
-        }),
-      ]),
-    );
-    animation.start();
-    return () => animation.stop();
+
+    let fake: Animated.CompositeAnimation | null = null;
+    let stale: ReturnType<typeof setTimeout> | undefined;
+
+    const startFake = () => {
+      if (fake) {
+        return;
+      }
+      fake = Animated.loop(
+        Animated.sequence([
+          Animated.timing(glowPulse, {
+            toValue: 1,
+            duration: 2000,
+            useNativeDriver: false,
+          }),
+          Animated.timing(glowPulse, {
+            toValue: 0,
+            duration: 2000,
+            useNativeDriver: false,
+          }),
+        ]),
+      );
+      fake.start();
+    };
+
+    const unsubscribe = audioService.subscribeSpectrum((frame) => {
+      if (!frame) {
+        return;
+      }
+      if (!liveGlow.current) {
+        liveGlow.current = true;
+        fake?.stop();
+        fake = null;
+      }
+      glowPulse.setValue(Math.min(1, frame.energy * 1.65));
+      if (stale) {
+        clearTimeout(stale);
+      }
+      stale = setTimeout(() => {
+        liveGlow.current = false;
+        startFake();
+      }, 400);
+    });
+
+    startFake();
+
+    return () => {
+      unsubscribe();
+      fake?.stop();
+      if (stale) {
+        clearTimeout(stale);
+      }
+    };
   }, [glowPulse, isPlaying]);
 
   if (!station) {
@@ -74,7 +116,7 @@ export function PlayerScreen() {
     );
   }
 
-  const tags = station.tags.slice(0, 4);
+  const tags = station.tags.slice(0, 3);
   const shareStation = async () => {
     await Share.share({
       message: `${station.name}\n${station.homepage || station.urlResolved || station.url}`,
@@ -118,7 +160,9 @@ export function PlayerScreen() {
               {station.name}
             </Text>
           </View>
-          <Text style={styles.freq}>{station.state || t('player.nationalFreq')}</Text>
+          <Text style={styles.freq} numberOfLines={1}>
+            {station.state || t('player.nationalFreq')}
+          </Text>
         </View>
         <View style={styles.topActions}>
           <PressableScale onPress={() => void shareStation()} style={styles.ghostBtn}>
@@ -175,29 +219,34 @@ export function PlayerScreen() {
             {isBuffering ? t('player.connecting') : t('player.live')}
           </Text>
         </View>
-        <Text style={styles.tech}>
+        <Text style={styles.tech} numberOfLines={1}>
           {formatCodec(station.codec)} • {formatBitrate(station.bitrate)} • STÉRÉO • ID{' '}
           {station.stationuuid.slice(0, 4)}
         </Text>
-        <Text style={styles.name}>{station.name}</Text>
-        <Text style={styles.sub} numberOfLines={2}>
+        <Text style={styles.name} numberOfLines={2} adjustsFontSizeToFit minimumFontScale={0.72}>
+          {station.name}
+        </Text>
+        <Text style={styles.sub} numberOfLines={1}>
           {error
             ? error === 'unavailable'
               ? t('errors.unavailable')
               : error === 'playFailed'
                 ? t('errors.playFailed')
                 : error
-            : `${station.tags.slice(0, 2).join(' & ') || t('player.continuous')} • ${stationLocation(station)}`}
+            : (formatNowPlaying(nowPlaying) ??
+              `${station.tags.slice(0, 2).join(' & ') || t('player.continuous')} • ${stationLocation(station)}`)}
         </Text>
         <View style={styles.tags}>
           {tags.map((item) => (
             <View key={item} style={styles.tag}>
-              <Text style={styles.tagText}>{item}</Text>
+              <Text style={styles.tagText} numberOfLines={1}>
+                {item}
+              </Text>
             </View>
           ))}
         </View>
         <View style={styles.wave}>
-          <Equalizer bars={12} height={28} playing={isPlaying} />
+          <Equalizer bars={12} height={28} playing={isPlaying} variant="player" />
         </View>
       </View>
 
@@ -282,6 +331,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    flexShrink: 0,
     paddingHorizontal: 20,
     paddingBottom: 8,
   },
@@ -304,6 +354,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
+    maxWidth: '100%',
   },
   flag: {
     fontSize: 12,
@@ -312,7 +363,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.outfit.semibold,
     fontSize: 14,
     color: colors.onSurface,
-    maxWidth: 160,
+    flexShrink: 1,
   },
   freq: {
     fontFamily: fonts.hanken.bold,
@@ -321,6 +372,7 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     color: 'rgba(196,201,175,0.7)',
     marginTop: 2,
+    maxWidth: '100%',
   },
   topActions: {
     flexDirection: 'row',
@@ -333,9 +385,12 @@ const styles = StyleSheet.create({
   },
   heroBlock: {
     flex: 1,
+    minHeight: 0,
+    width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 24,
+    overflow: 'hidden',
   },
   artWrap: {
     width: 232,
@@ -437,12 +492,17 @@ const styles = StyleSheet.create({
     color: 'rgba(196,201,175,0.8)',
     marginBottom: 10,
     textTransform: 'uppercase',
+    maxWidth: '100%',
+    paddingHorizontal: 8,
   },
   name: {
     fontFamily: fonts.outfit.bold,
     fontSize: 28,
+    lineHeight: 32,
     color: colors.tertiary,
     textAlign: 'center',
+    width: '100%',
+    flexShrink: 1,
   },
   sub: {
     fontFamily: fonts.hanken.regular,
@@ -460,12 +520,15 @@ const styles = StyleSheet.create({
   },
   tags: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexWrap: 'nowrap',
     justifyContent: 'center',
+    alignItems: 'center',
     gap: 6,
     marginTop: 12,
+    width: '100%',
   },
   tag: {
+    maxWidth: '32%',
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 99,
@@ -481,17 +544,13 @@ const styles = StyleSheet.create({
   },
   wave: {
     width: 280,
-    height: 36,
+    height: 40,
     marginTop: 16,
-    borderRadius: 12,
-    backgroundColor: 'rgba(27,27,31,0.4)',
-    borderWidth: 1,
-    borderColor: colors.white05,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 16,
   },
   controls: {
+    flexShrink: 0,
     paddingHorizontal: 24,
     gap: 20,
   },

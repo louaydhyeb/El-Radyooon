@@ -1,15 +1,16 @@
-import { StyleSheet, Switch, Text, View } from 'react-native';
+import { StyleSheet, Switch, Text, View, type StyleProp, type ViewStyle } from 'react-native';
 import { colors, fonts } from '../theme/tokens';
 
 type Props = {
   value: boolean;
   onValueChange: (value: boolean) => void;
   label: string;
+  style?: StyleProp<ViewStyle>;
 };
 
-export function LimeToggle({ value, onValueChange, label }: Props) {
+export function LimeToggle({ value, onValueChange, label, style }: Props) {
   return (
-    <View style={styles.row}>
+    <View style={[styles.row, style]}>
       <Switch
         value={value}
         onValueChange={onValueChange}
@@ -17,7 +18,9 @@ export function LimeToggle({ value, onValueChange, label }: Props) {
         thumbColor={value ? colors.surfaceContainerLowest : colors.white}
         ios_backgroundColor={colors.surfaceContainerHigh}
       />
-      <Text style={styles.label}>{label}</Text>
+      <Text style={styles.label} numberOfLines={1}>
+        {label}
+      </Text>
     </View>
   );
 }
@@ -35,5 +38,6 @@ const styles = StyleSheet.create({
     color: colors.white70,
     textAlign: 'left',
     flex: 1,
+    minWidth: 0,
   },
 });

@@ -1,11 +1,17 @@
+import { useMemo, useState } from 'react';
 import { Alert, Linking, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { FilterSheet } from '../components/FilterSheet';
 import { Icon } from '../components/Icon';
 import { LimeToggle } from '../components/LimeToggle';
 import { PressableScale } from '../components/PressableScale';
 import { useT } from '../i18n';
 import type { AppLocale } from '../i18n/translations';
+import { requestAlarmPermission } from '../services/alarm';
+import { formatClock, nextAlarmDate, useAlarmStore } from '../store/alarmStore';
+import { useFavoritesStore } from '../store/favoritesStore';
+import { usePlayerStore } from '../store/playerStore';
 import { useRecentsStore } from '../store/recentsStore';
 import { useSettingsStore } from '../store/settingsStore';
 import { colors, fonts, radii } from '../theme/tokens';
@@ -16,6 +22,16 @@ const LANGUAGES: { id: AppLocale; label: string }[] = [
   { id: 'ar', label: 'العربية' },
 ];
 
+const HOUR_OPTIONS = Array.from({ length: 24 }, (_, hour) => ({
+  id: String(hour),
+  label: String(hour).padStart(2, '0'),
+}));
+
+const MINUTE_OPTIONS = Array.from({ length: 60 }, (_, minute) => ({
+  id: String(minute),
+  label: String(minute).padStart(2, '0'),
+}));
+
 export function SettingsScreen() {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
@@ -25,6 +41,57 @@ export function SettingsScreen() {
   const locale = useSettingsStore((s) => s.locale);
   const setLocale = useSettingsStore((s) => s.setLocale);
   const clearRecents = useRecentsStore((s) => s.clearRecents);
+  const alarmEnabled = useAlarmStore((s) => s.enabled);
+  const alarmHour = useAlarmStore((s) => s.hour);
+  const alarmMinute = useAlarmStore((s) => s.minute);
+  const alarmStationUuid = useAlarmStore((s) => s.stationUuid);
+  const setAlarmEnabled = useAlarmStore((s) => s.setEnabled);
+  const setAlarmTime = useAlarmStore((s) => s.setTime);
+  const setAlarmStationUuid = useAlarmStore((s) => s.setStationUuid);
+  const favorites = useFavoritesStore((s) => s.stations);
+  const recents = useRecentsStore((s) => s.stations);
+  const currentStation = usePlayerStore((s) => s.currentStation);
+  const [hourOpen, setHourOpen] = useState(false);
+  const [minuteOpen, setMinuteOpen] = useState(false);
+  const [stationOpen, setStationOpen] = useState(false);
+
+  const stationOptions = useMemo(() => {
+    const seen = new Set<string>();
+    const options = [{ id: 'last', label: t('alarm.lastStation') }];
+    const pool = [...favorites, ...recents, ...(currentStation ? [currentStation] : [])];
+    for (const station of pool) {
+      if (seen.has(station.stationuuid)) {
+        continue;
+      }
+      seen.add(station.stationuuid);
+      options.push({ id: station.stationuuid, label: station.name });
+    }
+    return options;
+  }, [currentStation, favorites, recents, t]);
+
+  const selectedStationLabel =
+    stationOptions.find((item) => item.id === (alarmStationUuid ?? 'last'))?.label ??
+    t('alarm.lastStation');
+
+  const nextAlarm = nextAlarmDate(alarmHour, alarmMinute);
+  const isToday = nextAlarm.getDate() === new Date().getDate();
+  const nextLabel = t(isToday ? 'alarm.todayAt' : 'alarm.tomorrowAt', {
+    time: formatClock(alarmHour, alarmMinute),
+  });
+
+  const toggleAlarm = async (value: boolean) => {
+    if (value) {
+      const allowed = await requestAlarmPermission();
+      if (!allowed) {
+        Alert.alert(t('alarm.permissionTitle'), t('alarm.permissionBody'), [
+          { text: t('settings.cancel'), style: 'cancel' },
+          { text: t('alarm.openSettings'), onPress: () => void Linking.openSettings() },
+        ]);
+        return;
+      }
+    }
+    setAlarmEnabled(value);
+  };
 
   return (
     <View style={[styles.screen, { paddingTop: insets.top }]}>
@@ -57,6 +124,35 @@ export function SettingsScreen() {
             })}
           </View>
           <Text style={styles.hint}>{t('settings.languageHint')}</Text>
+        </View>
+
+        <Text style={styles.kicker}>{t('alarm.title')}</Text>
+        <View style={styles.card}>
+          <LimeToggle
+            value={alarmEnabled}
+            onValueChange={(value) => void toggleAlarm(value)}
+            label={t('alarm.enable')}
+          />
+          <Text style={styles.hint}>{t('alarm.enableHint')}</Text>
+          <View style={styles.timeRow}>
+            <PressableScale onPress={() => setHourOpen(true)} style={styles.timeBox}>
+              <Text style={styles.timeText}>{formatClock(alarmHour, alarmMinute).slice(0, 2)}</Text>
+            </PressableScale>
+            <Text style={styles.timeColon}>:</Text>
+            <PressableScale onPress={() => setMinuteOpen(true)} style={styles.timeBox}>
+              <Text style={styles.timeText}>{formatClock(alarmHour, alarmMinute).slice(3)}</Text>
+            </PressableScale>
+          </View>
+          {alarmEnabled ? <Text style={styles.nextLabel}>{nextLabel}</Text> : null}
+          <PressableScale style={styles.stationRow} onPress={() => setStationOpen(true)}>
+            <View style={{ flex: 1, minWidth: 0 }}>
+              <Text style={styles.rowTitle}>{t('alarm.station')}</Text>
+              <Text style={styles.rowSub} numberOfLines={1}>
+                {selectedStationLabel}
+              </Text>
+            </View>
+            <Icon name="expand-more" size={20} color={colors.onSurfaceVariant} />
+          </PressableScale>
         </View>
 
         <Text style={styles.kicker}>{t('settings.playback')}</Text>
@@ -102,6 +198,31 @@ export function SettingsScreen() {
           <Icon name="open-in-new" size={18} color={colors.primaryFixed} />
         </PressableScale>
       </ScrollView>
+
+      <FilterSheet
+        visible={hourOpen}
+        title={t('alarm.hour')}
+        options={HOUR_OPTIONS}
+        selectedId={String(alarmHour)}
+        onSelect={(id) => setAlarmTime(Number(id), alarmMinute)}
+        onClose={() => setHourOpen(false)}
+      />
+      <FilterSheet
+        visible={minuteOpen}
+        title={t('alarm.minute')}
+        options={MINUTE_OPTIONS}
+        selectedId={String(alarmMinute)}
+        onSelect={(id) => setAlarmTime(alarmHour, Number(id))}
+        onClose={() => setMinuteOpen(false)}
+      />
+      <FilterSheet
+        visible={stationOpen}
+        title={t('alarm.station')}
+        options={stationOptions}
+        selectedId={alarmStationUuid ?? 'last'}
+        onSelect={(id) => setAlarmStationUuid(id === 'last' ? null : id)}
+        onClose={() => setStationOpen(false)}
+      />
     </View>
   );
 }
@@ -194,6 +315,47 @@ const styles = StyleSheet.create({
   },
   langTextIdle: {
     color: colors.onSurfaceVariant,
+  },
+  timeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    paddingVertical: 8,
+  },
+  timeBox: {
+    minWidth: 72,
+    height: 56,
+    borderRadius: 16,
+    backgroundColor: colors.surfaceContainer,
+    borderWidth: 1,
+    borderColor: colors.limeBorder,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  timeText: {
+    fontFamily: fonts.outfit.bold,
+    fontSize: 28,
+    color: colors.primaryFixed,
+  },
+  timeColon: {
+    fontFamily: fonts.outfit.bold,
+    fontSize: 28,
+    color: colors.primaryFixed,
+  },
+  nextLabel: {
+    fontFamily: fonts.hanken.medium,
+    fontSize: 12,
+    color: colors.primaryFixed,
+    textAlign: 'center',
+  },
+  stationRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingTop: 8,
+    borderTopWidth: 1,
+    borderTopColor: colors.white05,
   },
   row: {
     backgroundColor: colors.surfaceContainerLow,

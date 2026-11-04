@@ -5,19 +5,21 @@ import {
   updateHomeWidget,
 } from '../../modules/home-widget/src';
 import { t } from '../i18n';
+import { formatNowPlaying } from './icy';
 import { usePlayerStore } from '../store/playerStore';
 import { useSettingsStore } from '../store/settingsStore';
 
 function pushFromPlayer() {
-  const { currentStation, isPlaying, isBuffering } = usePlayerStore.getState();
+  const { currentStation, isPlaying, isBuffering, nowPlaying } = usePlayerStore.getState();
   const hasStation = Boolean(currentStation);
+  const icy = formatNowPlaying(nowPlaying);
   void updateHomeWidget({
     stationName: currentStation?.name?.trim() || 'El Radyooon',
     subtitle: !hasStation
       ? t('widget.emptySubtitle')
       : isBuffering
         ? t('widget.connecting')
-        : t('widget.live'),
+        : icy || t('widget.live'),
     isPlaying,
     hasStation,
     toggleLabel: isPlaying ? t('a11y.pause') : t('a11y.play'),
@@ -42,7 +44,9 @@ export function startHomeWidgetSync(): () => void {
       state.currentStation?.stationuuid === prev.currentStation?.stationuuid &&
       state.currentStation?.name === prev.currentStation?.name &&
       state.isPlaying === prev.isPlaying &&
-      state.isBuffering === prev.isBuffering
+      state.isBuffering === prev.isBuffering &&
+      state.nowPlaying?.title === prev.nowPlaying?.title &&
+      state.nowPlaying?.artist === prev.nowPlaying?.artist
     ) {
       return;
     }

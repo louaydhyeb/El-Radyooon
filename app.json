@@ -2,7 +2,7 @@
   "expo": {
     "name": "El Radyooon",
     "slug": "el-radyooon",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
@@ -47,7 +47,11 @@
         "android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK",
         "android.permission.WAKE_LOCK",
         "android.permission.RECORD_AUDIO",
-        "android.permission.MODIFY_AUDIO_SETTINGS"
+        "android.permission.MODIFY_AUDIO_SETTINGS",
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.SCHEDULE_EXACT_ALARM",
+        "android.permission.RECEIVE_BOOT_COMPLETED",
+        "android.permission.VIBRATE"
       ]
     },
     "web": {
@@ -77,6 +81,13 @@
             "ios": ["fr", "en", "ar"],
             "android": ["fr", "en", "ar"]
           }
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "color": "#c6f340",
+          "defaultChannel": "el-radyooon-alarm"
         }
       ],
       [

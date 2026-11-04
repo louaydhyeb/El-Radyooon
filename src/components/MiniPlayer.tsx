@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, fonts, radii, shadows } from '../theme/tokens';
 import { formatBitrateCodec } from '../utils/station';
 import { useT } from '../i18n';
+import { formatNowPlaying } from '../services/icy';
 import { Icon } from './Icon';
 import { LiveDot } from './LiveDot';
 import { PressableScale } from './PressableScale';
@@ -20,6 +21,7 @@ export function MiniPlayer({ onExpand }: Props) {
   const station = usePlayerStore((s) => s.currentStation);
   const isPlaying = usePlayerStore((s) => s.isPlaying);
   const isBuffering = usePlayerStore((s) => s.isBuffering);
+  const nowPlaying = usePlayerStore((s) => s.nowPlaying);
   const togglePlay = usePlayerStore((s) => s.togglePlay);
   const playNext = usePlayerStore((s) => s.playNext);
   const playPrevious = usePlayerStore((s) => s.playPrevious);
@@ -55,7 +57,8 @@ export function MiniPlayer({ onExpand }: Props) {
                 <Text style={styles.sub} numberOfLines={1}>
                   {isBuffering
                     ? t('mini.connecting')
-                    : t('mini.live', { info: formatBitrateCodec(station) })}
+                    : (formatNowPlaying(nowPlaying) ??
+                      t('mini.live', { info: formatBitrateCodec(station) }))}
                 </Text>
               </View>
             </View>

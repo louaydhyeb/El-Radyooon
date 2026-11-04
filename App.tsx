@@ -21,6 +21,7 @@ import {
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { RootNavigator } from './src/navigation/RootNavigator';
+import { startAlarmService } from './src/services/alarm';
 import { startHomeWidgetSync } from './src/services/homeWidget';
 import { colors } from './src/theme/tokens';
 
@@ -51,7 +52,12 @@ export default function App() {
     if (!loaded) {
       return;
     }
-    return startHomeWidgetSync();
+    const stopWidget = startHomeWidgetSync();
+    const stopAlarm = startAlarmService();
+    return () => {
+      stopWidget();
+      stopAlarm();
+    };
   }, [loaded]);
 
   if (!loaded) {

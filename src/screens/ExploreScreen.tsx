@@ -205,6 +205,7 @@ export function ExploreScreen() {
 
       <View style={styles.countRow}>
         <LimeToggle
+          style={styles.hideToggle}
           value={hideBroken}
           onValueChange={(value) => {
             setHideBroken(value);
@@ -214,7 +215,7 @@ export function ExploreScreen() {
         />
         <View style={styles.count}>
           <LiveDot size={6} />
-          <Text style={styles.countText}>
+          <Text style={styles.countText} numberOfLines={1}>
             {stations.length}
             {hasMore ? '+' : ''} {t('explore.stations')}
           </Text>
@@ -366,11 +367,16 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    gap: 10,
+  },
+  hideToggle: {
+    flex: 1,
+    minWidth: 0,
   },
   count: {
     flexDirection: 'row',
     alignItems: 'center',
+    flexShrink: 0,
     gap: 6,
   },
   countText: {

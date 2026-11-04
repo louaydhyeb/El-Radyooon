@@ -8,7 +8,7 @@ export class RadioBrowserError extends Error {
   }
 }
 
-const APP_USER_AGENT = 'ElRadyooon/1.0';
+const APP_USER_AGENT = 'ElRadyooon/1.1';
 const REQUEST_TIMEOUT_MS = 12000;
 const BOOTSTRAP_SERVERS = [
   'https://de2.api.radio-browser.info',
