@@ -2,7 +2,13 @@ import { useEffect, useMemo } from 'react';
 import { Animated, StyleSheet, View, type ViewStyle } from 'react-native';
 import { audioService } from '../services/audioService';
 import { colors } from '../theme/tokens';
-import { barOpacity, idleEqualizerBars, shapeEqualizerBars, takeBars } from '../utils/spectrum';
+import {
+  LIVE_ENERGY,
+  barOpacity,
+  idleEqualizerBars,
+  shapeEqualizerBars,
+  takeBars,
+} from '../utils/spectrum';
 
 type Variant = 'mini' | 'player';
 
@@ -80,7 +86,7 @@ export function Equalizer({
     startFake();
 
     const unsubscribe = audioService.subscribeSpectrum((frame) => {
-      if (!frame) {
+      if (!frame || frame.energy < LIVE_ENERGY) {
         return;
       }
       stopFake();

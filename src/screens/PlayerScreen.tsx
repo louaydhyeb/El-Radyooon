@@ -246,7 +246,7 @@ export function PlayerScreen() {
           ))}
         </View>
         <View style={styles.wave}>
-          <Equalizer bars={12} height={28} playing={isPlaying} variant="player" />
+          <Equalizer bars={12} height={28} playing={isPlaying || isBuffering} variant="player" />
         </View>
       </View>
 

@@ -1,4 +1,5 @@
 export const SPECTRUM_BARS = 12;
+export const LIVE_ENERGY = 0.045;
 
 export type SpectrumFrame = {
   bars: number[];

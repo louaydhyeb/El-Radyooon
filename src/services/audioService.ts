@@ -11,6 +11,7 @@ import {
 import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 import {
+  LIVE_ENERGY,
   mixChannels,
   smoothSpectrum,
   spectrumFromFrames,
@@ -79,7 +80,11 @@ class AudioService {
     if (!frames.length) {
       return;
     }
-    this.smoothed = smoothSpectrum(this.smoothed, spectrumFromFrames(frames));
+    const next = smoothSpectrum(this.smoothed, spectrumFromFrames(frames));
+    if (next.energy < LIVE_ENERGY) {
+      return;
+    }
+    this.smoothed = next;
     this.emitSpectrum(this.smoothed);
   };
 
@@ -167,6 +172,8 @@ class AudioService {
     }
 
     const player = this.ensurePlayer();
+    this.samplingReady = false;
+    this.smoothed = null;
     player.replace({ uri });
     player.volume = 1;
     player.play();
