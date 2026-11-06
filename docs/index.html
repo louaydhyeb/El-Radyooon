@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>El Radyooon — 40 000 radios. Un seul écran.</title>
+    <meta
+      name="description"
+      content="El Radyooon, la radio en direct sans compte et sans pub. 40 000+ stations, réveil radio, widget, français, anglais et arabe. Disponible sur Google Play."
+    />
+    <link rel="canonical" href="https://louaydhyeb.github.io/El-Radyooon/" />
+    <link rel="icon" href="./assets/icon-512.png" />
+    <link rel="apple-touch-icon" href="./assets/icon-512.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="El Radyooon" />
+    <meta
+      property="og:description"
+      content="40 000 radios. Un seul écran. Sans compte · En direct."
+    />
+    <meta property="og:url" content="https://louaydhyeb.github.io/El-Radyooon/" />
+    <meta
+      property="og:image"
+      content="https://louaydhyeb.github.io/El-Radyooon/assets/feature-graphic.png"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#0E0E12" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "El Radyooon",
+        "operatingSystem": "ANDROID",
+        "applicationCategory": "MultimediaApplication",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+        "url": "https://louaydhyeb.github.io/El-Radyooon/",
+        "image": "https://louaydhyeb.github.io/El-Radyooon/assets/icon-512.png",
+        "installUrl": "https://play.google.com/store/apps/details?id=com.elradyooon.app",
+        "downloadUrl": "https://play.google.com/store/apps/details?id=com.elradyooon.app"
+      }
+    </script>
+    <style>
+      :root {
+        --bg: #0e0e12;
+        --surface: #131317;
+        --card: #1b1b1f;
+        --card-high: #1f1f23;
+        --lime: #c6f340;
+        --lime-dim: #abd61f;
+        --ink: #e4e1e7;
+        --muted: #c4c9af;
+        --outline: rgba(255, 255, 255, 0.08);
+        --glow: rgba(198, 243, 64, 0.28);
+        --max: 1120px;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: Outfit, system-ui, sans-serif;
+      }
+      body {
+        min-height: 100vh;
+      }
+      a {
+        color: inherit;
+      }
+      .wrap {
+        width: min(var(--max), calc(100% - 40px));
+        margin-inline: auto;
+      }
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        backdrop-filter: blur(16px);
+        background: rgba(14, 14, 18, 0.78);
+        border-bottom: 1px solid var(--outline);
+      }
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 14px 0;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+      }
+      .brand img {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+      }
+      .langs {
+        display: flex;
+        gap: 6px;
+      }
+      .lang {
+        border: 1px solid var(--outline);
+        background: transparent;
+        color: var(--muted);
+        border-radius: 999px;
+        padding: 6px 10px;
+        font: 600 12px/1 Outfit, sans-serif;
+        cursor: pointer;
+      }
+      .lang[aria-pressed='true'] {
+        background: var(--lime);
+        color: #161f00;
+        border-color: var(--lime);
+      }
+      .hero {
+        position: relative;
+        overflow: hidden;
+        padding: 56px 0 24px;
+      }
+      .hero::before {
+        content: '';
+        position: absolute;
+        inset: -20% auto auto 10%;
+        width: 480px;
+        height: 480px;
+        background: radial-gradient(circle, var(--glow), transparent 68%);
+        pointer-events: none;
+      }
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1.05fr 0.95fr;
+        gap: 48px;
+        align-items: center;
+      }
+      .kicker {
+        color: var(--lime);
+        font: 700 13px/1 Hanken Grotesk, sans-serif;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      h1 {
+        margin: 14px 0 12px;
+        font-size: clamp(40px, 6vw, 72px);
+        line-height: 0.95;
+        letter-spacing: -0.05em;
+      }
+      .lede {
+        max-width: 34ch;
+        color: var(--muted);
+        font: 400 18px/1.5 Hanken Grotesk, sans-serif;
+      }
+      .cta-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 14px;
+        margin-top: 28px;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        min-height: 52px;
+        padding: 0 22px;
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 700;
+        background: var(--lime);
+        color: #161f00;
+        box-shadow: 0 0 32px var(--glow);
+      }
+      .btn.ghost {
+        background: transparent;
+        color: var(--ink);
+        border: 1px solid var(--outline);
+        box-shadow: none;
+      }
+      .play-badge img {
+        height: 56px;
+        width: auto;
+      }
+      .phones {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        transform: rotate(-6deg);
+      }
+      .phones img {
+        width: 100%;
+        border-radius: 28px;
+        border: 1px solid var(--outline);
+        background: #111;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+      }
+      .phones img:nth-child(2) {
+        margin-top: 40px;
+      }
+      section {
+        padding: 28px 0 12px;
+      }
+      .section-title {
+        font-size: 28px;
+        letter-spacing: -0.04em;
+        margin: 0 0 18px;
+      }
+      .features {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--outline);
+        border-radius: 22px;
+        padding: 22px;
+      }
+      .card h3 {
+        margin: 0 0 8px;
+        font-size: 18px;
+        letter-spacing: -0.03em;
+      }
+      .card p {
+        margin: 0;
+        color: var(--muted);
+        font: 400 15px/1.5 Hanken Grotesk, sans-serif;
+      }
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--lime);
+        margin-bottom: 14px;
+        box-shadow: 0 0 16px var(--lime);
+      }
+      .shots {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+      }
+      .shots img {
+        width: 100%;
+        border-radius: 22px;
+        border: 1px solid var(--outline);
+      }
+      .band {
+        margin: 36px 0 20px;
+        padding: 36px;
+        border-radius: 28px;
+        background:
+          radial-gradient(circle at 12% 20%, var(--glow), transparent 42%),
+          var(--card-high);
+        border: 1px solid var(--outline);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+      }
+      .band h2 {
+        margin: 0 0 8px;
+        font-size: 32px;
+        letter-spacing: -0.04em;
+      }
+      .band p {
+        margin: 0;
+        color: var(--muted);
+      }
+      footer {
+        border-top: 1px solid var(--outline);
+        padding: 28px 0 48px;
+        color: var(--muted);
+        font: 400 14px/1.6 Hanken Grotesk, sans-serif;
+      }
+      footer a {
+        color: var(--lime);
+      }
+      .foot-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 24px;
+        flex-wrap: wrap;
+      }
+      [dir='rtl'] h1,
+      [dir='rtl'] .section-title,
+      [dir='rtl'] .band h2 {
+        letter-spacing: 0;
+      }
+      @media (max-width: 860px) {
+        .hero-grid,
+        .features,
+        .shots,
+        .band {
+          grid-template-columns: 1fr;
+          display: grid;
+        }
+        .phones {
+          max-width: 420px;
+          margin-inline: auto;
+          transform: none;
+        }
+        .phones img:nth-child(2) {
+          margin-top: 0;
+        }
+        .band {
+          display: grid;
+        }
+        h1 {
+          font-size: 42px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="wrap nav">
+        <a class="brand" href="./">
+          <img src="./assets/icon-512.png" alt="" />
+          El Radyooon
+        </a>
+        <div class="langs" role="group" aria-label="Language">
+          <button class="lang" type="button" data-lang="fr" aria-pressed="true">FR</button>
+          <button class="lang" type="button" data-lang="en" aria-pressed="false">EN</button>
+          <button class="lang" type="button" data-lang="ar" aria-pressed="false">عربي</button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="wrap hero-grid">
+          <div>
+            <p class="kicker" data-i18n="kicker">Radio en direct</p>
+            <h1 data-i18n="title">40 000 radios. Un seul écran.</h1>
+            <p class="lede" data-i18n="lede">
+              Découvrez, lancez, écoutez. Sans compte, sans pub — le monde en direct dans votre
+              poche.
+            </p>
+            <div class="cta-row">
+              <a
+                class="btn"
+                href="https://play.google.com/store/apps/details?id=com.elradyooon.app"
+                data-i18n="cta"
+                >Obtenir sur Google Play</a
+              >
+              <a
+                class="play-badge"
+                href="https://play.google.com/store/apps/details?id=com.elradyooon.app"
+                aria-label="Google Play"
+              >
+                <img
+                  id="play-badge"
+                  alt="Disponible sur Google Play"
+                  src="https://play.google.com/intl/fr_fr/badges/static/images/badges/fr_badge_web_generic.png"
+                />
+              </a>
+            </div>
+          </div>
+          <div class="phones">
+            <img src="./assets/01-accueil.png" alt="Accueil El Radyooon" />
+            <img src="./assets/03-lecteur.png" alt="Lecteur El Radyooon" />
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="wrap">
+          <h2 class="section-title" data-i18n="featuresTitle">Pensé pour écouter vraiment</h2>
+          <div class="features">
+            <article class="card">
+              <div class="dot"></div>
+              <h3 data-i18n="f1t">Catalogue mondial</h3>
+              <p data-i18n="f1d">
+                Des milliers de stations via Radio Browser. Aucune radio n’est figée dans l’app.
+              </p>
+            </article>
+            <article class="card">
+              <div class="dot"></div>
+              <h3 data-i18n="f2t">Réveil radio</h3>
+              <p data-i18n="f2d">
+                Réveillez-vous sur votre station, avec fondu d’entrée. Widget play / pause sur
+                l’écran d’accueil.
+              </p>
+            </article>
+            <article class="card">
+              <div class="dot"></div>
+              <h3 data-i18n="f3t">Sans compte, sans pub</h3>
+              <p data-i18n="f3d">
+                Favoris et historique restent sur l’appareil. FR, EN, AR — et RTL pour l’arabe.
+              </p>
+            </article>
+            <article class="card">
+              <div class="dot"></div>
+              <h3 data-i18n="f4t">Titre en cours</h3>
+              <p data-i18n="f4d">
+                Métadonnées ICY quand le flux les envoie, reprise de la dernière radio, station
+                suivante si le flux est mort.
+              </p>
+            </article>
+            <article class="card">
+              <div class="dot"></div>
+              <h3 data-i18n="f5t">Lecteur vivant</h3>
+              <p data-i18n="f5d">
+                Égaliseur branché sur le son, minuterie sommeil, contrôles écran verrouillé.
+              </p>
+            </article>
+            <article class="card">
+              <div class="dot"></div>
+              <h3 data-i18n="f6t">Gratuit</h3>
+              <p data-i18n="f6d">
+                Téléchargement gratuit sur Google Play. Android, package com.elradyooon.app.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="wrap">
+          <h2 class="section-title" data-i18n="shotsTitle">L’app, en vrai</h2>
+          <div class="shots">
+            <img src="./assets/01-accueil.png" alt="Accueil" />
+            <img src="./assets/02-explorer.png" alt="Explorer" />
+            <img src="./assets/03-lecteur.png" alt="Lecteur" />
+            <img src="./assets/04-favoris.png" alt="Favoris" />
+          </div>
+        </div>
+      </section>
+
+      <div class="wrap">
+        <div class="band">
+          <div>
+            <h2 data-i18n="bandTitle">Écoutez dès maintenant</h2>
+            <p data-i18n="bandText">El Radyooon 1.1.0 — radio en direct, partout.</p>
+          </div>
+          <a
+            class="btn"
+            href="https://play.google.com/store/apps/details?id=com.elradyooon.app"
+            data-i18n="cta"
+            >Obtenir sur Google Play</a
+          >
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="wrap foot-row">
+        <div>
+          <strong>El Radyooon</strong>
+          <p data-i18n="privacy">
+            Pas de compte. Pas de pub. Les favoris restent sur votre téléphone. Les flux viennent
+            de Radio Browser.
+          </p>
+        </div>
+        <div>
+          <a href="https://play.google.com/store/apps/details?id=com.elradyooon.app">Google Play</a>
+          ·
+          <a href="https://github.com/louaydhyeb/El-Radyooon">GitHub</a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const PLAY = 'https://play.google.com/store/apps/details?id=com.elradyooon.app';
+      const copy = {
+        fr: {
+          kicker: 'Radio en direct',
+          title: '40 000 radios. Un seul écran.',
+          lede: 'Découvrez, lancez, écoutez. Sans compte, sans pub — le monde en direct dans votre poche.',
+          cta: 'Obtenir sur Google Play',
+          featuresTitle: 'Pensé pour écouter vraiment',
+          f1t: 'Catalogue mondial',
+          f1d: 'Des milliers de stations via Radio Browser. Aucune radio n’est figée dans l’app.',
+          f2t: 'Réveil radio',
+          f2d: 'Réveillez-vous sur votre station, avec fondu d’entrée. Widget play / pause sur l’écran d’accueil.',
+          f3t: 'Sans compte, sans pub',
+          f3d: 'Favoris et historique restent sur l’appareil. FR, EN, AR — et RTL pour l’arabe.',
+          f4t: 'Titre en cours',
+          f4d: 'Métadonnées ICY quand le flux les envoie, reprise de la dernière radio, station suivante si le flux est mort.',
+          f5t: 'Lecteur vivant',
+          f5d: 'Égaliseur branché sur le son, minuterie sommeil, contrôles écran verrouillé.',
+          f6t: 'Gratuit',
+          f6d: 'Téléchargement gratuit sur Google Play. Android, package com.elradyooon.app.',
+          shotsTitle: 'L’app, en vrai',
+          bandTitle: 'Écoutez dès maintenant',
+          bandText: 'El Radyooon 1.1.0 — radio en direct, partout.',
+          privacy:
+            'Pas de compte. Pas de pub. Les favoris restent sur votre téléphone. Les flux viennent de Radio Browser.',
+          badge: 'https://play.google.com/intl/fr_fr/badges/static/images/badges/fr_badge_web_generic.png',
+        },
+        en: {
+          kicker: 'Live radio',
+          title: '40,000 stations. One screen.',
+          lede: 'Discover, tap, listen. No account, no ads — the world, live, in your pocket.',
+          cta: 'Get it on Google Play',
+          featuresTitle: 'Built for actually listening',
+          f1t: 'Worldwide catalog',
+          f1d: 'Thousands of stations via Radio Browser. Nothing is hardcoded.',
+          f2t: 'Radio alarm',
+          f2d: 'Wake up to your station with a fade-in. Home-screen play / pause widget.',
+          f3t: 'No account, no ads',
+          f3d: 'Favorites and history stay on-device. French, English, Arabic — RTL included.',
+          f4t: 'Now playing',
+          f4d: 'ICY titles when the stream sends them, resume last station, skip a dead stream.',
+          f5t: 'Living player',
+          f5d: 'Sound-driven equalizer, sleep timer, lock-screen controls.',
+          f6t: 'Free',
+          f6d: 'Free on Google Play. Android package com.elradyooon.app.',
+          shotsTitle: 'The app, for real',
+          bandTitle: 'Listen now',
+          bandText: 'El Radyooon 1.1.0 — live radio, anywhere.',
+          privacy:
+            'No account. No ads. Favorites stay on your phone. Streams come from Radio Browser.',
+          badge: 'https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png',
+        },
+        ar: {
+          kicker: 'راديو مباشر',
+          title: '٤٠ ألف محطة. شاشة واحدة.',
+          lede: 'اكتشف، شغّل، استمع. بدون حساب وبدون إعلانات — العالم مباشرة في جيبك.',
+          cta: 'حمّل من Google Play',
+          featuresTitle: 'مصمم للاستماع فعلًا',
+          f1t: 'كتالوج عالمي',
+          f1d: 'آلاف المحطات عبر Radio Browser. لا محطات ثابتة داخل التطبيق.',
+          f2t: 'منبّه راديو',
+          f2d: 'استيقظ على محطتك مع تزايد الصوت. ويدجت تشغيل / إيقاف على الشاشة الرئيسية.',
+          f3t: 'بدون حساب ولا إعلانات',
+          f3d: 'المفضلة والسجل على الجهاز فقط. فرنسية، إنجليزية، عربية مع RTL.',
+          f4t: 'الآن يُشغَّل',
+          f4d: 'عنوان ICY إن وُجد، استئناف آخر محطة، وتجاوز البث الميت.',
+          f5t: 'مشغّل حي',
+          f5d: 'إيكولايزر من الصوت الحقيقي، مؤقت نوم، وتحكم من شاشة القفل.',
+          f6t: 'مجاني',
+          f6d: 'تحميل مجاني على Google Play. أندرويد، الحزمة com.elradyooon.app.',
+          shotsTitle: 'التطبيق كما هو',
+          bandTitle: 'استمع الآن',
+          bandText: 'El Radyooon 1.1.0 — راديو مباشر في أي مكان.',
+          privacy:
+            'لا حساب. لا إعلانات. المفضلة تبقى على هاتفك. البث يأتي من Radio Browser.',
+          badge: 'https://play.google.com/intl/ar_sa/badges/static/images/badges/ar_badge_web_generic.png',
+        },
+      };
+
+      const badge = document.getElementById('play-badge');
+
+      function setLang(lang) {
+        const pack = copy[lang] || copy.fr;
+        document.documentElement.lang = lang;
+        document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+        document.querySelectorAll('[data-i18n]').forEach((node) => {
+          const key = node.getAttribute('data-i18n');
+          if (pack[key]) node.textContent = pack[key];
+        });
+        document.querySelectorAll('.lang').forEach((btn) => {
+          btn.setAttribute('aria-pressed', String(btn.dataset.lang === lang));
+        });
+        badge.src = pack.badge;
+        localStorage.setItem('elradyooon-lang', lang);
+      }
+
+      document.querySelectorAll('.lang').forEach((btn) => {
+        btn.addEventListener('click', () => setLang(btn.dataset.lang));
+      });
+
+      const start =
+        localStorage.getItem('elradyooon-lang') ||
+        (navigator.language || 'fr').slice(0, 2);
+      setLang(copy[start] ? start : 'fr');
+
+      document.querySelectorAll('a[href="' + PLAY + '"]').forEach((a) => {
+        a.rel = 'noopener';
+      });
+    </script>
+  </body>
+</html>
