@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
+import { create } from './create';
 import { radioBrowserApi } from '../api/radioBrowserApi';
 import { audioService } from '../services/audioService';
 import { fetchNowPlaying, type NowPlaying } from '../services/icy';
@@ -186,11 +186,19 @@ export const usePlayerStore = create<PlayerState>()(
 
       audioService.setStatusHandler((playing, buffering, error) => {
         const hadError = Boolean(error);
-        set({
-          isPlaying: playing,
-          isBuffering: buffering,
-          error: hadError ? 'unavailable' : playing ? null : get().error,
-        });
+        const prev = get();
+        const nextError = hadError ? 'unavailable' : playing ? null : prev.error;
+        if (
+          prev.isPlaying !== playing ||
+          prev.isBuffering !== buffering ||
+          prev.error !== nextError
+        ) {
+          set({
+            isPlaying: playing,
+            isBuffering: buffering,
+            error: nextError,
+          });
+        }
         if (playing) {
           clearDeadWatch();
           const station = get().currentStation;

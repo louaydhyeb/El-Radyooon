@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
+import { create } from './create';
 import { detectDeviceLocale, type AppLocale } from '../i18n/translations';
 import { applyLayoutDirection } from '../i18n/rtl';
 

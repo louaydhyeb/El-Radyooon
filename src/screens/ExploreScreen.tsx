@@ -39,13 +39,6 @@ export function ExploreScreen() {
   const [query, setQuery] = useState(incomingQuery ?? '');
   const [countrycode, setCountrycode] = useState(incomingCountry ?? '');
   const [tag, setTag] = useState(incomingTag ?? '');
-  const [prevParams, setPrevParams] = useState(route.params);
-  if (route.params !== prevParams) {
-    setPrevParams(route.params);
-    if (incomingQuery != null) setQuery(incomingQuery);
-    if (incomingTag != null) setTag(incomingTag);
-    if (incomingCountry != null) setCountrycode(incomingCountry);
-  }
   const [codec, setCodec] = useState('');
   const [hideBroken, setHideBroken] = useState(useSettingsStore.getState().hideBroken);
   const [stations, setStations] = useState<RadioStation[]>([]);
@@ -67,6 +60,20 @@ export function ExploreScreen() {
   const favorites = useFavoritesStore((s) => s.stations);
   const toggleFavorite = useFavoritesStore((s) => s.toggleFavorite);
   const t = useT();
+  const incomingKey = `${incomingQuery ?? ''}|${incomingTag ?? ''}|${incomingCountry ?? ''}`;
+  const [appliedIncoming, setAppliedIncoming] = useState(incomingKey);
+  if (incomingKey !== appliedIncoming) {
+    setAppliedIncoming(incomingKey);
+    if (incomingQuery != null) {
+      setQuery(incomingQuery);
+    }
+    if (incomingTag != null) {
+      setTag(incomingTag);
+    }
+    if (incomingCountry != null) {
+      setCountrycode(incomingCountry);
+    }
+  }
 
   useEffect(() => {
     void radioBrowserApi.getCountries().then((list) => {

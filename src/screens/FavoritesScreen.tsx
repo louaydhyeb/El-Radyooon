@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Alert, ScrollView, Share, StyleSheet, Text, View } from 'react-native';
 import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import type { CompositeNavigationProp } from '@react-navigation/native';
@@ -22,8 +23,19 @@ type Nav = CompositeNavigationProp<
 
 export function FavoritesScreen() {
   const navigation = useNavigation<Nav>();
-  const stations = useFavoritesStore((s) => s.sortedStations());
+  const favoriteStations = useFavoritesStore((s) => s.stations);
   const sort = useFavoritesStore((s) => s.sort);
+  const stations = useMemo(() => {
+    if (sort === 'name') {
+      return [...favoriteStations].sort((a, b) => a.name.localeCompare(b.name, 'fr'));
+    }
+    if (sort === 'country') {
+      return [...favoriteStations].sort((a, b) =>
+        (a.country || a.countrycode).localeCompare(b.country || b.countrycode, 'fr'),
+      );
+    }
+    return favoriteStations;
+  }, [favoriteStations, sort]);
   const setSort = useFavoritesStore((s) => s.setSort);
   const removeFavorite = useFavoritesStore((s) => s.removeFavorite);
   const exportPayload = useFavoritesStore((s) => s.exportPayload);
